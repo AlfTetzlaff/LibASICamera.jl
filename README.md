@@ -66,7 +66,7 @@ get_temperature(cam)
 
 Take a still image:
 
-```
+```julia
 set_gain(cam, 30)  # example values
 set_exposure(cam, 500)
 img = capture_still(cam)
