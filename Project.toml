@@ -1,6 +1,6 @@
 name = "LibASICamera"
 uuid = "d52fb188-cbdc-4a2a-a9d4-49c222ce4b32"
-authors = ["max "]
+authors = ["Max Freudenberg"]
 version = "0.1.0"
 
 [deps]
