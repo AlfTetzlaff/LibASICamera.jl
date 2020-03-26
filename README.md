@@ -6,7 +6,7 @@ Please note that this is my first julia project, so suggestions for improvements
 
 ## Installation
 
-To install this package, spin um julia, hit the ']' key to enter the package manager, the type:
+To install this package, spin up julia, hit the ']' key to enter the package manager, the type:
 
 ```julia
 add LibASICamera
