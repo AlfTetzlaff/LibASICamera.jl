@@ -2,6 +2,8 @@
 
 A julia wrapper for the ASI Camera interface.
 
+Please note that this is my first julia project, so suggestions for improvements are welcome!
+
 ## Installation
 
 To install this package, spin um julia, hit the ']' key to enter the package manager, the type:
@@ -10,7 +12,13 @@ To install this package, spin um julia, hit the ']' key to enter the package man
 add LibASICamera
 ```
 
-The ZWO ASI SDK will be downloaded in the background. Please note that (on Linux) you have to install the udev rules for the cameras. The installation process will present a command on how to do this.
+The ZWO ASI SDK will be downloaded in the background. Please note that (on Linux) you have to install the udev rules for the cameras which you find in the [SDK](https://astronomy-imaging-camera.com/software-drivers).
+
+In your terminal, run:
+
+```
+sudo install /path/to/asi.rules /lib/udev/rules.d
+```
 
 The wrapper was written and tested on Linux. In principle it should work on Windows and Mac as well, but I couldn't test it so far.
 
