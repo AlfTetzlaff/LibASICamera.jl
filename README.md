@@ -8,7 +8,7 @@ Please note that this is my first julia project, so suggestions for improvements
 
 To install this package, spin um julia, hit the ']' key to enter the package manager, the type:
 
-```
+```julia
 add LibASICamera
 ```
 
@@ -24,7 +24,7 @@ The wrapper was written and tested on Linux. In principle it should work on Wind
 
 You can then connect the camera and run partial tests on functionality by typing in the package manager:
 
-```
+```julia
 test LibASICamera
 ```
 
@@ -32,14 +32,14 @@ test LibASICamera
 
 Get the connected devices and open them:
 
-```
+```julia
 devices = get_connected_devices()
 cam = devices[1]
 ```
 
 Query information about the camera, like resolution or pixel size:
 
-```
+```julia
 @show get_camera_property(cam)
 #or
 @show cam.info
@@ -47,7 +47,7 @@ Query information about the camera, like resolution or pixel size:
 
 Get the parameters, which can be controlled or queried by the user, like gain, exposure or temperature:
 
-```
+```julia
 @show get_control_caps(cam)
 # or
 @show cam.control_caps
@@ -55,7 +55,7 @@ Get the parameters, which can be controlled or queried by the user, like gain, e
 
 Get and set a control value, for some, special shorthand functions exist:
 
-```
+```julia
 value, is_auto_controlled = get_control_value(cam, ASI_GAIN)
 set_control_value(cam, ASI_GAIN, value, is_auto_controlled)
 set_gain(cam, value)
@@ -76,7 +76,7 @@ img = capture_still(cam)
 
 Take a video using Makie:
 
-```
+```julia
 using LibASICamera
 using Makie
 
@@ -122,7 +122,7 @@ close_camera(cam)
 
 The above example runs the video capturing asynchronously in the main _thread_. You might notice that the REPL input gets sluggish under certain circumstances (exposure times, bandwidth settings and depending on your hardware). This can be resolved by moving the video capturing to another _process_ using Distributed.jl:
 
-```
+```julia
 using Distributed
 addprocs(1)
 @everywhere using LibASICamera
