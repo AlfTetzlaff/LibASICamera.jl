@@ -9,7 +9,7 @@ Please note that this is my first julia project, so suggestions for improvements
 To install this package, spin up julia, hit the ']' key to enter the package manager, then type:
 
 ```julia
-add LibASICamera
+pkg> add LibASICamera
 ```
 
 The ZWO ASI SDK will be downloaded in the background. Please note that (on Linux) you have to install the udev rules for the cameras which you find in the [SDK](https://astronomy-imaging-camera.com/software-drivers).
@@ -25,7 +25,7 @@ The wrapper was written and tested on Linux. In principle it should work on Wind
 You can then connect the camera and run partial tests on functionality by typing in the package manager:
 
 ```julia
-test LibASICamera
+pkg> test LibASICamera
 ```
 
 ## Usage
