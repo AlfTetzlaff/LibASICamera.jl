@@ -22,10 +22,10 @@ Allocates an image buffer for the camera to write to.
     width: Image width
     height: Image height
     img_type: One of
-        -ASI\_IMG\_RAW8
-        -ASI\_IMG\_Y8
-        -ASI\_IMG\_RAW16
-        -ASI\_IMG\_RAW24
+        -ASI_IMG_RAW8
+        -ASI_IMG_Y8
+        -ASI_IMG_RAW16
+        -ASI_IMG_RAW24
 
 # Returns:
     A zero-initialized array of the appropriate shape.
@@ -67,7 +67,7 @@ Fetches the camera properties for a given ID.
     id: Camera id
 
 # Returns:
-    ASI\_CAMERA\_INFO object
+    ASI_CAMERA_INFO object
 
 # Throws:
     ASIError in case of failure
@@ -165,7 +165,7 @@ The camera needs to be open.
     id: Camera id
 
 # Returns:
-    Vector of ASI\_CONTROL\_CAPS structs.
+    Vector of ASI_CONTROL_CAPS structs.
 
 # Throws:
     ASIError
@@ -228,7 +228,7 @@ Fetches the current setting of the control value, e.g. exposure or gain.
     control_type: The control type to fetch, e.g. exposure or gain.
 
 # Returns:
-    A tuple (value, is\_auto)
+    A tuple (value, is_auto)
 
 # Throws:
     ASIError
@@ -316,7 +316,7 @@ ASI120's data size must be a multiple of 1024 which means width*height%1024==0.
     width: ROI width
     height: ROI height
     binning: The binning mode; 2 means to read out 2x2 pixels together. Check
-        which binning values are supported in the ASI\_CAMERA\_INFO struct of the
+        which binning values are supported in the ASI_CAMERA_INFO struct of the
         camera struct or by calling get_camera_property(id).
 
 # Throws:
@@ -493,7 +493,7 @@ whether the return value equals ASI_SUCCESS.
     timeout_ms: Time to wait for a frame. Recommendation: 2 * exposure_μs + 500 ms <- inconsistent units?!
 
 # Returns:
-    An ASI\_ERROR\_CODE, which should be ASI_SUCCESS.
+    An ASI_ERROR_CODE, which should be ASI_SUCCESS.
 """
 function get_video_data!(id::Integer, buffer, timeout_ms=500)
     return ASIGetVideoData(id, buffer, sizeof(buffer), Int32(round(timeout_ms)))
@@ -531,7 +531,7 @@ Deactivates the pulse guide in the given direction.
 
 # Args:
     id: Camera id
-    direction: Guiding direction; call 'instances(ASI\_GUIDE\_DIRECTION)' for options.
+    direction: Guiding direction; call 'instances(ASI_GUIDE_DIRECTION)' for options.
 
 # Throws:
     ASIError
@@ -581,7 +581,7 @@ stop_exposure(cam::ASICamera) = stop_exposure(cam.info.CameraID)
     get_exp_status(id::Integer)
 
 Returns the status of an ongoing exposure.
-See 'instances(ASI\_EXP\_STATUS)'.
+See 'instances(ASI_EXP_STATUS)'.
 
 # Throws:
     ASIError
@@ -633,9 +633,10 @@ get_id(cam::ASICamera) = get_id(cam.info.CameraID)
     capture_still(id::Integer)
 
 Captures a still image. You have to set gain, exposure etc. beforehand using
-set\_control\_value(...).
+set_control_value(...).
 
-# Returns: An array containing the image.
+# Returns:
+    An array containing the image.
 
 # Throws:
     ASIWrapperError if the image format is not supported by the wrapper, or
