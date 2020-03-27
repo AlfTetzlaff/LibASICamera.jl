@@ -1,7 +1,12 @@
 include(joinpath(@__DIR__, "LibASICamera_types.jl"))
 include(joinpath(@__DIR__, "LibASICamera_ccalls.jl"))
 
+"""
+    ASICamera
 
+The struct which contains information about the camera.
+Has fields .info and .control_caps.
+"""
 struct ASICamera
     info::ASI_CAMERA_INFO
     control_caps::Vector{ASI_CONTROL_CAPS}
@@ -13,15 +18,19 @@ end
 
 Allocates an image buffer for the camera to write to.
 
-Args:
+# Args:
     width: Image width
     height: Image height
-    img_type: One of ASI_IMG_RAW8, ASI_IMG_Y8, ASI_IMG_RAW16, ASI_IMG_RAW24
+    img_type: One of
+        -ASI\_IMG\_RAW8
+        -ASI\_IMG\_Y8
+        -ASI\_IMG\_RAW16
+        -ASI\_IMG\_RAW24
 
-Returns:
+# Returns:
     A zero-initialized array of the appropriate shape.
 
-Throws:
+# Throws:
     ASIWrapperError if an unsupported image type is given.
 """
 function allocate_buffer(width::Integer, height::Integer, img_type::ASI_IMG_TYPE)
@@ -54,13 +63,13 @@ get_num_connected_cameras() = ASIGetNumOfConnectedCameras()
 
 Fetches the camera properties for a given ID.
 
-Args:
+# Args:
     id: Camera id
 
-Returns:
-    ASI_CAMERA_INFO object
+# Returns:
+    ASI\_CAMERA\_INFO object
 
-Throws:
+# Throws:
     ASIError in case of failure
 """
 function get_camera_property(id::Integer)
@@ -84,10 +93,10 @@ Open the camera before any interaction with the camera,
 this will not affect the camera which is capturing.
 Then you must call init_camera() to perform any actions.
 
-Args:
+# Args:
     id: Camera ID
 
-Throws:
+# Throws:
 	ASIError
 """
 function open_camera(id::Integer)
@@ -108,10 +117,10 @@ open_camera(cam::ASICamera) = open_camera(cam.info.CameraID)
 
 Initialize the camera. Needs to be called before capturing any data.
 
-Args:
+# Args:
     id: Camera id
 
-Throws:
+# Throws:
     ASIError
 """
 function init_camera(id::Integer)
@@ -129,10 +138,10 @@ init_camera(cam::ASICamera) = init_camera(cam.info.CameraID)
 
 Closes the ASI camera connection.
 
-Args:
-    id: Camera ID from get_camera_property (most often 0) or a camera object
+# Args:
+    id: Camera id
 
-Throws:
+# Throws:
 	ASIError
 """
 function close_camera(id::Integer)
@@ -152,13 +161,13 @@ Returns the control properties available for this camera.
 
 The camera needs to be open.
 
-Args:
-    id: Camera id from get_camera_property()
+# Args:
+    id: Camera id
 
-Returns:
-    Vector of ASI_CONTROL_CAPS structs.
+# Returns:
+    Vector of ASI\_CONTROL\_CAPS structs.
 
-Throws:
+# Throws:
     ASIError
 """
 function get_control_caps(id::Integer)
@@ -214,14 +223,14 @@ end
 
 Fetches the current setting of the control value, e.g. exposure or gain.
 
-Args:
+# Args:
     id: Camera id
     control_type: The control type to fetch, e.g. exposure or gain.
 
-Returns:
-    A tuple (value, is_auto)
+# Returns:
+    A tuple (value, is\_auto)
 
-Throws:
+# Throws:
     ASIError
 """
 function get_control_value(id::Integer, control_type::ASI_CONTROL_TYPE)
@@ -243,14 +252,14 @@ get_control_value(cam::ASICamera, control_type::ASI_CONTROL_TYPE) = get_control_
 Sets a control (e.g. exposure) to the given value. Automatically sets the
 minimum or maximum if the given value is out of bounds.
 
-Args:
+# Args:
     id: Camera id
     control_type: The control type to set, e.g. exposure or gain.
     value: The value to which the control is set.
     auto: Whether or not the control should be automatically set.
         Check if this is supported for the given control beforehand.
 
-Throws:
+# Throws:
     ASIError
 """
 function set_control_value(id::Integer, control_type::ASI_CONTROL_TYPE, value, auto::Bool=false)
@@ -302,15 +311,15 @@ width to 640 and the height to 480 if you want to run at 640x480 @ BIN2.
 
 ASI120's data size must be a multiple of 1024 which means width*height%1024==0.
 
-Args:
+# Args:
     id: Camera id
     width: ROI width
     height: ROI height
     binning: The binning mode; 2 means to read out 2x2 pixels together. Check
-        which binning values are supported in the ASI_CAMERA_INFO struct of the
+        which binning values are supported in the ASI\_CAMERA\_INFO struct of the
         camera struct or by calling get_camera_property(id).
 
-Throws:
+# Throws:
     ASIError
 """
 function set_roi_format(id::Integer, width, height, binning, img_type::ASI_IMG_TYPE)
@@ -361,7 +370,8 @@ You can call this while the camera is streaming to move the ROI. By default,
 the ROI will be centered. In binned mode, the start values are relative to the
 binned sensor size.
 
-Throws: ASIError
+# Throws:
+    ASIError
 """
 function set_roi_start(id::Integer, startx, starty)
     err = ASISetStartPos(id, startx, starty)
@@ -439,7 +449,7 @@ disable_dark_subtract(cam::ASICamera) = disable_dark_subtract(cam.info.CameraID)
 
 Start video capture.
 
-Throws:
+# Throws:
     ASIError
 """
 function start_video(id::Integer)
@@ -457,7 +467,7 @@ start_video(cam::ASICamera) = start_video(cam.info.CameraID)
 
 Stops a running video capture.
 
-Throws:
+# Throws:
     ASIError
 """
 function stop_video(id::Integer)
@@ -477,13 +487,13 @@ Writes a video frame to the given buffer. Make sure the buffer is large
 enough to fit the frame. Call this as fast as possible in a loop and check
 whether the return value equals ASI_SUCCESS.
 
-Args:
+# Args:
     id: Camera id
     buffer: A buffer to write the video frame to.
     timeout_ms: Time to wait for a frame. Recommendation: 2 * exposure_μs + 500 ms <- inconsistent units?!
 
-Returns:
-    An ASI_ERROR_CODE, which should be ASI_SUCCESS.
+# Returns:
+    An ASI\_ERROR\_CODE, which should be ASI_SUCCESS.
 """
 function get_video_data!(id::Integer, buffer, timeout_ms=500)
     return ASIGetVideoData(id, buffer, sizeof(buffer), Int32(round(timeout_ms)))
@@ -497,11 +507,11 @@ get_video_data!(cam::ASICamera, buffer, timeout_ms) = get_video_data!(cam.info.C
 
 Activates the pulse guide in the given direction.
 
-Args:
+# Args:
     id: Camera id
     direction: Guiding direction; call 'instances(ASI_GUIDE_DIRECTION)'
 
-Throws:
+# Throws:
     ASIError
 """
 function pulse_guide_on(id::Integer, direction::ASI_GUIDE_DIRECTION)
@@ -519,11 +529,11 @@ pulse_guide_on(cam::ASICamera) = pulse_guide_on(cam.info.CameraID)
 
 Deactivates the pulse guide in the given direction.
 
-Args:
+# Args:
     id: Camera id
-    direction: Guiding direction; call 'instances(ASI_GUIDE_DIRECTION)'
+    direction: Guiding direction; call 'instances(ASI\_GUIDE\_DIRECTION)' for options.
 
-Throws:
+# Throws:
     ASIError
 """
 function pulse_guide_off(id::Integer, direction::ASI_GUIDE_DIRECTION)
@@ -571,9 +581,9 @@ stop_exposure(cam::ASICamera) = stop_exposure(cam.info.CameraID)
     get_exp_status(id::Integer)
 
 Returns the status of an ongoing exposure.
-See 'instances(ASI_EXP_STATUS)'.
+See 'instances(ASI\_EXP\_STATUS)'.
 
-Throws:
+# Throws:
     ASIError
 """
 function get_exp_status(id::Integer)
@@ -623,11 +633,11 @@ get_id(cam::ASICamera) = get_id(cam.info.CameraID)
     capture_still(id::Integer)
 
 Captures a still image. You have to set gain, exposure etc. beforehand using
-set_control_value(...).
+set\_control\_value(...).
 
-Returns: An array containing the image.
+# Returns: An array containing the image.
 
-Throws:
+# Throws:
     ASIWrapperError if the image format is not supported by the wrapper, or
     ASIError in other unfortunate cases
 """
@@ -667,10 +677,10 @@ Get the presets for offset and gain values at different "sweet spots".
 
 # Returns:
     A dictionary containing:
-        -The offset at highest dynamic range
-        -The offset at unity gain
-        -The gain with lowest readout noise
-        -The offset with lowest readout noise
+        1. The offset at highest dynamic range
+        2. The offset at unity gain
+        3. The gain with lowest readout noise
+        4. The offset with lowest readout noise
 
 # Throws:
     ASIError
@@ -814,7 +824,7 @@ in the CameraInfo is true.
     high: If true, the selected pin will output a high level as a signal
 					when it is effective.
     delay: The delay between the camera receiving a trigger signal and the
-            output of the valid level. From 0 microsecond to 2,000,000,000 μs.
+            output of the valid level. From 0 μs - 2,000,000,000 μs.
     duration: The duration of the valid level output. Same range as delay.
 
 """
