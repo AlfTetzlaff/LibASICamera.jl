@@ -1,4 +1,4 @@
-# ![](docs/LibASICamera_logo.svg =40x40) LibASICamera.jl
+# ![](https://github.com/AlfTetzlaff/LibASICamera.jl/blob/master/docs/LibASICamera_logo.svg =40x40) LibASICamera.jl
 
 A julia wrapper for the ASI Camera interface.
 
