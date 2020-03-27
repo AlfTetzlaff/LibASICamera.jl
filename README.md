@@ -1,5 +1,6 @@
 # <img src="/docs/LibASICamera_logo.svg?raw=true&sanitize=true" width="5%"> LibASICamera.jl
 [![](https://img.shields.io/badge/docs-dev-blue)](https://alftetzlaff.github.io/LibASICamera.jl/dev/)
+[![](https://img.shields.io/badge/ZWO-ASI-critical)](https://astronomy-imaging-camera.com/)
 
 A julia wrapper for the ASI Camera interface.
 
