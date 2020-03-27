@@ -1,4 +1,4 @@
-# ![](/docs/build/assets/logo.svg?raw=true&sanitize=true) LibASICamera API
+# LibASICamera API
 
 ```@autodocs
 Modules = [LibASICamera]
