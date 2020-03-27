@@ -13,7 +13,7 @@ To install this package, spin up julia, hit the ']' key to enter the package man
 ```julia
 pkg> add LibASICamera  # works, as soon as this package is registered
 #or
-pkg> add https://github.com/AlfTetzlaff/LibASICamera.jl @0.1
+pkg> add https://github.com/AlfTetzlaff/LibASICamera.jl
 ```
 
 The ZWO ASI SDK will be downloaded in the background. Please note that (on Linux) you have to install the udev rules for the cameras which you find in the [SDK](https://astronomy-imaging-camera.com/software-drivers).
