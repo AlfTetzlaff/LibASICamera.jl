@@ -2,5 +2,5 @@
 
 ```@autodocs
 Modules = [LibASICamera]
-Order   = [:function, :type]
+Order   = [:type, :function]
 ```
