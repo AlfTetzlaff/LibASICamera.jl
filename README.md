@@ -113,7 +113,7 @@ function capture_video(cam::ASICamera)
     # Makie scene setup
     colorrange = img_type == ASI_IMG_RAW16 ? 2^16-1 : 255
     scene = Scene()
-    img = image!(scene, buffer, show_axis = false, scale_plot = false,          colorrange=(0,colorrange))[end]
+    img = image!(scene, buffer, show_axis = false, scale_plot = false, colorrange=(0,colorrange))[end]
     display(scene)
 
     function video_loop()
@@ -144,32 +144,60 @@ The above example runs the video capturing asynchronously in the main _thread_. 
 ```julia
 using Distributed
 addprocs(1)
+nprocs()
+
+#%%
 @everywhere using LibASICamera
 @everywhere using Makie
 
+#%%
+@everywhere function main()
+    cam = get_connected_devices()[1]
+    set_exposure(cam, 500, true)
+    set_gain(cam, 30)
+    set_control_value(cam, ASI_BANDWIDTHOVERLOAD, 90)
+    set_control_value(cam, ASI_HIGH_SPEED_MODE, false)
+    set_roi_format(cam, 1280, 960, 1, ASI_IMG_RAW8)
+    # set_roi_format(cam, 640, 480, 2, ASI_IMG_RAW8)
+    # set_roi_format(cam, 640, 480, 1, ASI_IMG_RAW8)
+    # set_roi_format(cam, 320, 240, 1, ASI_IMG_RAW8)
+    # set_roi_format(cam, 168, 128, 1, ASI_IMG_RAW8)
 
-@everywhere function capture_video(cam::ASICamera)
-    ...
+    function capture_video(cam::ASICamera)
+        # Camera stuff setup
+        width, height, binning, img_type = get_roi_format(cam)
+        buffer = allocate_buffer(width, height, img_type)
+
+        # Makie scene setup
+        colorrange = img_type == ASI_IMG_RAW16 ? 2^16-1 : 255
+        scene = Scene()
+        img = image!(scene, buffer, show_axis = false, scale_plot = false, colorrange=(0,colorrange))[end]
+        t = text!(scene, "0 FPS", color=:yellow, position=(width, height), align=(:top, :right), textsize=Int(height/16))
+        display(scene)
+
+        function video_loop(cam, buffer, img, t)
+            err = ASI_SUCCESS
+            while isopen(scene) && err == ASI_SUCCESS
+                t0 = time_ns()
+                err = get_video_data!(cam, buffer, 5000)
+                img[1] = buffer[end:-1:1, :]  # for some reason we have to flip x
+                t1 = time_ns()
+                t[end][1] = string(round(1. /(Float64(t1-t0)/1E9), digits=1), " FPS")
+                yield()
+            end
+            println(err)
+        end
+
+        start_video(cam)
+        video_loop(cam, buffer, img, t)
+        stop_video(cam)
+    end
+
+    capture_video(cam)
+    close_camera(cam)
 end
 
-@everywhere devices = get_connected_devices()
-@everywhere cam = devices[1]
-
-# set gain and exposure from worker #2
-remotecall_fetch(set_gain, 2, cam, 30, true)
-remotecall_fetch(set_exposure, 2, cam, 500, true)
-
-# launches capture in another process :-)
-remotecall(capture_video, 2, cam)
-
-# note that the values for worker 1 and 2 may differ, use only one!
-v1 = remotecall_fetch(get_control_value, 1, cam, ASI_EXPOSURE)
-v2 = remotecall_fetch(get_control_value, 2, cam, ASI_EXPOSURE)
-
-v1 == v2
-
-# Always close the camera at the end
-close_camera(cam)
+remotecall(main, 2)
 ```
 
 If you encounter any issues, don't hesitate to ask!
