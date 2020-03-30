@@ -1,4 +1,5 @@
 # <img src="/docs/LibASICamera_logo.svg?raw=true&sanitize=true" width="5%"> LibASICamera.jl
+
 [![](https://img.shields.io/badge/docs-dev-blue)](https://alftetzlaff.github.io/LibASICamera.jl/dev/)
 [![](https://img.shields.io/badge/ZWO-ASI-critical)](https://astronomy-imaging-camera.com/)
 
@@ -16,13 +17,27 @@ pkg> add LibASICamera  # works, as soon as this package is registered
 pkg> add https://github.com/AlfTetzlaff/LibASICamera.jl
 ```
 
-The ZWO ASI SDK will be downloaded in the background. Please note that (on Linux) you have to install the udev rules for the cameras which you find in the [SDK](https://astronomy-imaging-camera.com/software-drivers).
+### Linux specific steps
 
-In your terminal, run:
+The ZWO ASI SDK will be downloaded in the background. Please note that (on Linux) you have to install the udev rules for the cameras. Run
+
+```julia
+pkg> build -v LibASICamera
+```
+
+to get the command to run in order to install the udev rules.
+
+Or in your terminal, run:
 
 ```
 sudo install /path/to/asi.rules /lib/udev/rules.d
 ```
+
+### Windows specific steps
+
+Download and install the camera driver from [here](https://astronomy-imaging-camera.com/software-drivers).
+
+### Test
 
 The wrapper was written and tested on Linux. In principle it should work on Windows and Mac as well, but I couldn't test it so far.
 

@@ -35,8 +35,8 @@ function ASIGetControlCaps(iCameraID, iControlIndex, pControlCaps)
     ccall((:ASIGetControlCaps, libASICamera2), ASI_ERROR_CODE, (Cint, Cint, Ref{_ASI_CONTROL_CAPS}), iCameraID, iControlIndex, pControlCaps)
 end
 
-function ASIGetControlValue(iCameraID, ControlType, plValue::Ref{Clong}, pbAuto::Ref{Bool})
-    ccall((:ASIGetControlValue, libASICamera2), ASI_ERROR_CODE, (Cint, Cint, Ref{Clong}, Ref{Bool}), iCameraID, ControlType, plValue, pbAuto)
+function ASIGetControlValue(iCameraID, ControlType, plValue::Ref{Clong}, pbAuto::Ref{ASI_BOOL})
+    ccall((:ASIGetControlValue, libASICamera2), ASI_ERROR_CODE, (Cint, Cint, Ref{Clong}, Ref{ASI_BOOL}), iCameraID, ControlType, plValue, pbAuto)
 end
 
 function ASISetControlValue(iCameraID, ControlType, lValue, bAuto)

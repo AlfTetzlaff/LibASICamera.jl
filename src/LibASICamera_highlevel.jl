@@ -235,16 +235,17 @@ Fetches the current setting of the control value, e.g. exposure or gain.
 """
 function get_control_value(id::Integer, control_type::ASI_CONTROL_TYPE)
     value = Ref{Clong}(0)
-    auto  = Ref{Bool}(false)
+    auto  = Ref{ASI_BOOL}(ASI_FALSE)
     err = ASIGetControlValue(id, control_type, value, auto)
     if err != ASI_SUCCESS
         throw(ASIError(err))
     end
-    return (value.x, auto.x)
+    return (value[], Bool(auto[]))
 end
 
 get_control_value(cam::ASICamera, control_type::ASI_CONTROL_TYPE) = get_control_value(cam.info.CameraID, control_type)
 
+get_temperature(id) = get_control_value(id, ASI_TEMPERATURE)[1] * 0.1
 
 """
     set_control_value(id::Integer, control_type::ASI_CONTROL_TYPE, value, auto::Bool=false)
@@ -282,7 +283,6 @@ set_autoexp_target_brightness(id, brightness)   = set_control_value(id, ASI_AUTO
 set_highspeed_mode(id, active)                  = set_control_value(id, ASI_HIGH_SPEED_MODE, active)
 # ...
 
-get_temperature(id)                             = get_control_value(id, ASI_TEMPERATURE)[1] * 0.1
 
 """
     get_status(id::Integer)
