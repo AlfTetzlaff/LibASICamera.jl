@@ -1,7 +1,7 @@
 name = "LibASICamera"
 uuid = "d52fb188-cbdc-4a2a-a9d4-49c222ce4b32"
 authors = ["Max Freudenberg"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 CEnum = "fa961155-64e5-5f13-b03f-caf6b980ea82"
