@@ -47,12 +47,26 @@ end
 # copy extracted library file to lib subfolder
 if Sys.islinux()
     mv(joinpath(lib_dir, "asi.rules"), joinpath(deps_dir, "..", "asi.rules"), force=true)
-    if isa(1, Int64)
-        source_file = joinpath(lib_x64_dir, "libASICamera2.so.$version")
+
+    if Sys.ARCH==:x86_64
+        if Sys.WORD_SIZE==64
+            source_file = joinpath(lib_x64_dir, "libASICamera2.so.$version")
+            target_file = joinpath(lib_target_dir, "libASICamera2.so")
+            mv(source_file, target_file, force=true)
+        else
+            source_file = joinpath(lib_x86_dir, "libASICamera2.so.$version")
+            target_file = joinpath(lib_target_dir, "libASICamera2.so")
+            mv(source_file, target_file, force=true)
+        end
+
+    # RaspberryPi support
+    elseif Sys.ARCH==:aarch64
+        source_file = joinpath(lib_dir, "armv8", "libASICamera2.so.$version")
         target_file = joinpath(lib_target_dir, "libASICamera2.so")
         mv(source_file, target_file, force=true)
-    else
-        source_file = joinpath(lib_x86_dir, "libASICamera2.so.$version")
+
+    elseif Sys.ARCH==:arm || (Sys.ARCH==:aarch && Sys.WORD_SIZE==32)
+        source_file = joinpath(lib_dir, "armv7", "libASICamera2.so.$version")
         target_file = joinpath(lib_target_dir, "libASICamera2.so")
         mv(source_file, target_file, force=true)
     end
