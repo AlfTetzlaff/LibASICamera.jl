@@ -96,5 +96,10 @@ if Sys.isunix()
     rules_file = joinpath(par_dir, "asi.rules")
     println("\nPlease install the udev rules for the camera device, so that you can
     access it without root privileges. To install the rules, run
-    'sudo install $rules_file /lib/udev/rules.d'\n")
+    'sudo install $rules_file /lib/udev/rules.d'\n
+    or\n
+    'sudo install $rules_file /etc/udev/rules.d'\n
+    and reboot or relog and reconnect the camera. Then run\n
+    'cat /sys/module/usbcore/parameters/usbfs_memory_mb'\n
+    and make sure the result is 200.\n")
 end
